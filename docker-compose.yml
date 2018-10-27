@@ -5,4 +5,4 @@ services:
     volumes:
       - ./:/var/FreeRTOS
     command:
-      bash -c "cd /var/FreeRTOS && node benchmark"
+      bash -c "cd /var/FreeRTOS && node tasks/generateTestFile && node benchmark"
