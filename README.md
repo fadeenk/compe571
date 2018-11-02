@@ -4,7 +4,12 @@
 - generateLoad function not generating sufficient load on powerful machines
 
 # TODO
-Add description and clean up further
+- [✔] serial process benchmarking
+- [✖] support accurate linux measurement
+- [✖] Add memory measurement support
+  - [✖] windows
+  - [✖] linux
+- [✖] Add description and clean up further
 
 # Requirements
 ### Note: You can use either or depending on what you have available/ more convenient for you
