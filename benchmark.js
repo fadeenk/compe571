@@ -30,7 +30,8 @@ if (os.platform().match(/^win/)) {
  */
 const processes = ['busyWait', 'lazyWait', 'readFile', 'readFileSync'];
 process.env.fileToRead = 'sampleFile';
-const underHeavyLoad = true;
+const parallel = true;
+const underHeavyLoad = false;
 const HEAVY_LOAD_THRESHOLD = 70;
 const SAMPLE_SIZE = 50;
 
@@ -82,6 +83,8 @@ eventEmitter.on('completed', (proc) => {
         // output results to the user
         console.log(`Benchmarking execution time: ${((diff[0] * NS_PER_SEC + diff[1])/1e9).toFixed(2)} sec`)
         console.log(`CPU => Min: ${Math.min(...cpuLoad)}%, Max: ${Math.max(...cpuLoad)}%, Avg: ${(cpuLoad.reduce(((number, acc) => number + acc), 0)/cpuLoad.length).toFixed(2)}%`)
+    } else if (!parallel) {
+        measure(processes[completedProcesses])
     }
 });
 
@@ -90,9 +93,12 @@ if (underHeavyLoad) {
     generateLoad();
 }
 
-// TODO measure processes serially
-// start measuring each process in the processes array
-processes.forEach((process) => measure(process));
+if (parallel) {
+    // start measuring every process in the processes array
+    processes.forEach((process) => measure(process));
+} else {
+    measure(processes[completedProcesses])
+}
 
 // creates 3 processes to increase cpu load
 function generateLoad() {
