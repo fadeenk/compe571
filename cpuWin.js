@@ -3,9 +3,14 @@ const { spawn } = require('child_process');
 function cpuLoad() {
     return new Promise((resolve) => {
         const child = spawn('wmic', ['cpu', 'get', 'loadpercentage'], {stdio: 'pipe'});
-        child.stdout.on('data', (data) => {
-            resolve(parseInt(data.toString('utf8').substring(16).trim()));
+        let data = '';
+        child.stdout.on('data', (buff) => {
+            data += buff.toString('utf8');
         });
+        child.on('close', () => {
+            resolve(parseInt(data.substring(16).trim()));
+        })
+
     })
 }
 

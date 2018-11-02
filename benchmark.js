@@ -42,16 +42,13 @@ console.log(`Benchmarking ${processes.join(', ')} in parallel with sample size o
 // Set an interval to measure the cpu load every second
 let sampleCPUInterval = setInterval(() => {
     cpu.measure().then((percentage) => {
-        // ensure we got a valid read
-        if (!isNaN(percentage)) {
-            executingProcesses.forEach(process => {
-                if (!Array.isArray(cpuLoad[process])) cpuLoad[process] = [];
-                // track cpu load (used for providing user with information regarding benchmarking cpu utilization/ proof heavyLoad mode works properly)
-                cpuLoad[process].push(percentage)
-            });
-            // check to see if need to add more load if under heavy load mode
-            if (underHeavyLoad && percentage < HEAVY_LOAD_THRESHOLD) generateLoad();
-        }
+        executingProcesses.forEach(process => {
+            if (!Array.isArray(cpuLoad[process])) cpuLoad[process] = [];
+            // track cpu load (used for providing user with information regarding benchmarking cpu utilization/ proof heavyLoad mode works properly)
+            cpuLoad[process].push(percentage)
+        });
+        // check to see if need to add more load if under heavy load mode
+        if (underHeavyLoad && percentage < HEAVY_LOAD_THRESHOLD) generateLoad();
     })
 }, 1000);
 
