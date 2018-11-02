@@ -63,7 +63,7 @@ eventEmitter.on('measurementTaken', (proc, id) => {
     // if sample size is not reached keep measuring
     if (counters[proc] < SAMPLE_SIZE) {
         counters[proc]++;
-        measure(proc)
+        measure(proc, id)
     } else {
         // if measurements completed emit completed event
         eventEmitter.emit('completed', proc, id);
@@ -85,7 +85,7 @@ eventEmitter.on('completed', (proc, id) => {
         clearInterval(sampleCPUInterval);
         // measure benchmarking execution time
         const diff = process.hrtime(benchTime);
-
+        // combine all the cpu metrics from all processes into one array so we can calculate the metrics for the benchmark process
         cpuLoad = [].concat(...cpuLoad);
         // output results to the user
         console.log(`Benchmarking execution time: ${((diff[0] * NS_PER_SEC + diff[1])/1e9).toFixed(2)} sec`)
@@ -123,7 +123,8 @@ function measure(proc, id) {
     const measurable  = spawn('node', ['./tasks/' + proc]);
     // when process exits
     measurable.on('close', (code) => {
-        // TODO remove from executing processes
+        // once the process has finished executing remove it from the executing processes so we dont collect cpu metrics for it any more
+        executingProcesses.splice(executingProcesses.indexOf(id), 1);
         // measure the time diff
         const diff = process.hrtime(time);
         // append data to results object
