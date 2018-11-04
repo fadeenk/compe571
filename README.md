@@ -5,7 +5,8 @@
 
 # TODO
 - [✔] serial process benchmarking
-- [✖] support accurate linux measurement
+- [✔] support accurate linux measurement
+  - If ran in a docker container the CPU percentage is relative to the root process. Docker containers run as child process (which is why we get wrong reading). [Source](https://medium.com/techlogs/docker-how-to-check-your-containers-cpu-usage-8121515a3b8).
 - [✖] Add memory measurement support
   - [✖] windows
   - [✖] linux
