@@ -32,8 +32,8 @@ if (os.platform().match(/^win/)) {
  */
 const processes = ['readFile', 'readFileSync'];
 process.env.fileToRead = 'sampleFile';
-const parallel = false;
-const underHeavyLoad = false;
+const parallel = true;
+const underHeavyLoad = true;
 const HEAVY_LOAD_THRESHOLD = 70;
 const SAMPLE_SIZE = 50;
 
