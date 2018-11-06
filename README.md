@@ -1,7 +1,8 @@
 # Known issues
 - using top to get cpu usage is inaccurate within docker
-- all tasks being measured at the same time (not really measure tasks correctly when not in no load mode)
-- generateLoad function not generating sufficient load on powerful machines
+  - When running in a docker container the CPU percentage is relative to the root process. 
+  - Docker containers run as child process (which is why we get wrong reading). [Source](https://medium.com/techlogs/docker-how-to-check-your-containers-cpu-usage-8121515a3b8).
+- generateLoad function not working properly in docker due to the wrong reading
 
 # TODO
 - [✔] serial process benchmarking
@@ -10,7 +11,7 @@
 - [✔] Add memory measurement support
   - [✔] windows
   - [✔] linux
-- [✖] Add description and clean up further
+- [✔] Add description and clean up further
 
 # Requirements
 ### Note: You can use either or depending on what you have available/ more convenient for you
@@ -19,7 +20,7 @@
 
 # How to execute
 * using node: 
-  * `node tasks/generateTestFile`
+  * `node util/generateTestFile` (only needed if benchmarking readFile)
   * `node benchmark`
 * using docker:
   * `docker-compose up`

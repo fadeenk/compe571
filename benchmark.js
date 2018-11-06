@@ -17,9 +17,9 @@ let completedProcesses = 0;
 // use appropriate cpu method to get cpu usage
 let cpu;
 if (os.platform().match(/^win/)) {
-    cpu = require('./cpuWin');
+    cpu = require('./util/cpuWin');
 } else {
-    cpu = require('./cpuLinux');
+    cpu = require('./util/cpuLinux');
 }
 
 /**
@@ -38,7 +38,7 @@ const HEAVY_LOAD_THRESHOLD = 70;
 const SAMPLE_SIZE = 50;
 
 // Print message to the user explaining what is being executed
-console.log(`Benchmarking ${processes.join(', ')} in parallel with sample size of ${SAMPLE_SIZE} and${underHeavyLoad === false ? ' NOT': ''} under heavy load${underHeavyLoad === true ? ` with cpu minimum threshold of ${HEAVY_LOAD_THRESHOLD}`: ''}.`);
+console.log(`Benchmarking ${processes.join(', ')} in ${parallel ? 'parallel' : 'serial'} with sample size of ${SAMPLE_SIZE} and${underHeavyLoad === false ? ' NOT': ''} under heavy load${underHeavyLoad === true ? ` with cpu minimum threshold of ${HEAVY_LOAD_THRESHOLD}`: ''}.`);
 
 // Set an interval to measure every second
 let sampleCPUInterval = setInterval(() => {
@@ -118,7 +118,7 @@ eventEmitter.on('completed', (proc, id) => {
     }
 });
 
-// if in heavyLoad mode generate initial load the start
+// if in heavyLoad mode generate initial load at the start
 if (underHeavyLoad) {
     generateLoad();
 }
