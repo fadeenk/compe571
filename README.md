@@ -24,3 +24,17 @@
   * `node benchmark`
 * using docker:
   * `docker-compose up`
+
+# Configuration
+All configurations are part of the source code in the `benchmark.js` file. 
+
+The following configuration are available
+
+Field | Type | Description
+------------|----------|----
+processes | string[] | the tasks names in the `tasks` folder to benchmark
+fileToRead | string | the file to use for the `readFile` and the `readFileSync` tasks
+parallel | boolean | controls tasks benchmarking. If true, will benchmark all tasks in parallel.
+underHeavyLoad | boolean | controls creation of additional tasks to create artificial cpu load.
+HEAVY_LOAD_THRESHOLD | Number | the minimum cpu load threshold
+SAMPLE_SIZE | Number | The sample size to use for benchmarking each task
