@@ -12,8 +12,7 @@ function cpuLoad() {
             const idle 	= current.idle - base.idle;
             const total = current.total - base.total;
             // calculate percentage
-            const percentage = idle === 0 ? 100 : idle / total * 100;
-            console.log(percentage)
+            const percentage = 100 - (idle / total * 100);
             return resolve(percentage)
         }, 1000 );
     })
