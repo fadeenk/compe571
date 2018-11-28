@@ -1,26 +1,50 @@
-const { spawn } = require('child_process');
+const os = require('os');
 
 function cpuLoad() {
     return new Promise((resolve) => {
-        // use top to get cpu data for the system
-        const child = spawn('top', ['-b', '-n 1'], {stdio: 'pipe'});
-        let data = '';
-        // read the data from the stdout stream
-        child.stdout.on('data', (buff) => {
-            data += buff.toString('utf8');
-        });
-        // when process completed execution
-        child.on('close', () => {
-            // get the string buffer and remove header then split each line into an array
-            const row = data.substring(5).split('\n')[2];
-            // ensure output is received correctly (initial top output doesn't stream properly)
-            if (!row || !row.startsWith('%Cpu(s):')) return resolve('');
-            // split the row into the different cpu status and pick the idle out then convert it to a number
-            const percentage = parseFloat(row.split(',')[3].split(' ')[1]);
-            // calculate the utilization percentage
-            return resolve(100 - percentage);
-        })
+        const stats1 = getCPUInfo();
+        const startIdle = stats1.idle;
+        const startTotal = stats1.total;
+
+        setTimeout(function() {
+            const stats2 = getCPUInfo();
+            const endIdle = stats2.idle;
+            const endTotal = stats2.total;
+
+            const idle 	= endIdle - startIdle;
+            const total 	= endTotal - startTotal;
+            const perc	= idle / total * 100;
+            console.log(perc)
+            return resolve(perc)
+        }, 1000 );
     })
+}
+
+function getCPUInfo(){
+    const cpus = os.cpus();
+
+    let user = 0;
+    let nice = 0;
+    let sys = 0;
+    let idle = 0;
+    let irq = 0;
+    let total = 0;
+
+    for(var cpu in cpus){
+        if (!cpus.hasOwnProperty(cpu)) continue;
+        user += cpus[cpu].times.user;
+        nice += cpus[cpu].times.nice;
+        sys += cpus[cpu].times.sys;
+        irq += cpus[cpu].times.irq;
+        idle += cpus[cpu].times.idle;
+    }
+
+    total = user + nice + sys + idle + irq;
+
+    return {
+        'idle': idle,
+        'total': total
+    };
 }
 
 // export the function to be able to call it from other files
