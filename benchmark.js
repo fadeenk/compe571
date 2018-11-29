@@ -36,6 +36,7 @@ const parallel = true;
 const underHeavyLoad = true;
 const HEAVY_LOAD_THRESHOLD = 70;
 const SAMPLE_SIZE = 50;
+const debugMode = false;
 
 // Print message to the user explaining what is being executed
 console.log(`Benchmarking ${processes.join(', ')} in ${parallel ? 'parallel' : 'serial'} with sample size of ${SAMPLE_SIZE} and${underHeavyLoad === false ? ' NOT': ''} under heavy load${underHeavyLoad === true ? ` with cpu minimum threshold of ${HEAVY_LOAD_THRESHOLD}`: ''}.`);
@@ -44,6 +45,10 @@ console.log(`Benchmarking ${processes.join(', ')} in ${parallel ? 'parallel' : '
 let sampleCPUInterval = setInterval(() => {
     // measure the cpu load
     cpu.measure().then((percentage) => {
+        // if debug mode print cpu percentage
+        if (debugMode) {
+            console.log(percentage);
+        }
         executingProcesses.forEach(process => {
             if (!Array.isArray(cpuLoad[process])) cpuLoad[process] = [];
             if (!Array.isArray(memoryUsage[process])) memoryUsage[process] = [];
